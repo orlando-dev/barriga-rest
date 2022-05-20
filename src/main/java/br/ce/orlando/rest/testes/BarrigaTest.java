@@ -74,4 +74,19 @@ public class BarrigaTest extends BaseTest{
 		;
 	}
 	
+	@Test
+	public void naoDeveInserirContaMesmoNome() {
+		given()
+			.header("Authorization", "JWT " + TOKEN)
+			.body("{ \"nome\": \"conta alterada\" }")
+			.log().all()
+		.when()
+			.post("/contas")
+		.then()
+			.log().all()
+			.statusCode(400)
+			.body("error", Matchers.is("Já existe uma conta com esse nome!"))
+		;
+	}
+	
 }
