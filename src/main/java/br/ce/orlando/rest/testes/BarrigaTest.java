@@ -89,4 +89,29 @@ public class BarrigaTest extends BaseTest{
 		;
 	}
 	
+	@Test
+	public void deveInserirMovimentacaoSucesso() {
+		Movimentacao move = new Movimentacao();
+		move.setConta_id(1177425);
+//		move.setUsuario_id(usuario_id);
+		move.setDescricao("Descrição da movimentação");
+		move.setEnvolvido("Envolvido na move");
+		move.setTipo("REC");
+		move.setData_transacao("01/01/2000");
+		move.setData_pagamento("10/05/2010");
+		move.setValor(100f);
+		move.setStatus(true);
+		
+		given()
+			.header("Authorization", "JWT " + TOKEN)
+			.log().all()
+			.body(move)
+		.when()
+			.post("/transacoes")
+		.then()
+			.log().all()
+			.statusCode(201)
+		;
+	}
+	
 }
