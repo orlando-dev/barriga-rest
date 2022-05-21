@@ -147,6 +147,22 @@ public class BarrigaTest extends BaseTest{
 		;
 	}
 	
+	
+	@Test
+	public void naoDeveRemoverContaComMovimentaca() {
+
+		given()
+			.header("Authorization", "JWT " + TOKEN)
+			.log().all()
+		.when()
+			.delete("/contas/1177425")
+		.then()
+			.log().all()
+			.statusCode(500)
+//			.body("$", Matchers.hasSize(1))
+			.body("constraint", Matchers.is("transacoes_conta_id_foreign"))
+		;
+	}
 
 	private Movimentacao getMovimentacao() {
 		Movimentacao move = new Movimentacao();
