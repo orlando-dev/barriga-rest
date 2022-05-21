@@ -2,37 +2,13 @@ package br.ce.orlando.rest.testes.refac;
 
 import static io.restassured.RestAssured.given;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hamcrest.Matchers;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.ce.orlando.rest.core.BaseTest;
-import io.restassured.RestAssured;
+import br.ce.orlando.rest.utils.BarrigaUtils;
 
 public class ContasTest extends BaseTest{
-	
-	@BeforeClass
-	public static void login() {
-		Map<String, String> login = new HashMap<String, String>();
-		login.put("email", "orlando.dev@hotmail.com");
-		login.put("senha", "1234");
-		
-		String TOKEN = given()
-		.when()
-			.log().all()
-			.body(login)
-			.post("/signin")
-		.then()
-			.statusCode(200)
-			.extract().path("token");
-		
-		RestAssured.requestSpecification.header("Authorization", "JWT " + TOKEN);
-		
-		RestAssured.get("/reset").then().statusCode(200);
-	}
 	
 	@Test
 	public void deveIncluirContaComSucesso() {
@@ -48,7 +24,7 @@ public class ContasTest extends BaseTest{
 	
 	@Test
 	public void deveAlterarContaComSucesso() {
-		Integer CONTA_ID = getIdContaPeloNome("Conta para alterar");
+		Integer CONTA_ID = BarrigaUtils.getIdContaPeloNome("Conta para alterar");
 		
 		given()
 			.body("{ \"nome\": \"Conta alterada\" }")
@@ -79,9 +55,4 @@ public class ContasTest extends BaseTest{
 			.body("error", Matchers.is("Já existe uma conta com esse nome!"))
 		;
 	}
-	
-	public Integer getIdContaPeloNome(String nome) {
-		return RestAssured.get("/contas?nome="+nome).then().extract().path("id[0]");
-	}
-	
 }
